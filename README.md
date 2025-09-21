@@ -54,6 +54,31 @@ We study how **technology similarity** (spillovers/synergy) and **product simila
 **Python — theory simulations**
 - `10_cournot_duopoly.py` — duopoly Cournot with cost-reducing R&D and patent transmission φ; heatmaps for **φ\***, **welfare**, **avg z**, **avg q**; also exports a LaTeX table.
 - `11_cournot_nfirm_linear.py` — **N-firm linear** Cournot simulation on a (δ̄, ω̄) grid; parallelized; robust for larger N; heatmaps for **φ\***, **welfare**, **avg z**, **avg q**.
+
+**Python — nonlinear & sector simulations (advanced)**
+
+- `12_nonlinear_sz_core.py` — Nonlinear Cournot with **separate** R&D channels:
+  process R&D `z` (cost reduction, spills via ω and φ) and product-differentiation R&D `s`
+  (reduces substitutability via `s_i^(1-φ)` in Γ). Block-iterates on `(q, z, s)`, enforces
+  the **spectral-radius gate** `ρ(Γ(s)) < 2`, and exports heatmaps for **φ\***, **W**, **avg(s+z)**, **avg(q)**.
+
+- `13_nonlinear_z_sparse.py` — Nonlinear model with **process R&D only** (`z`)
+  on **sparse δ/ω networks**. Builds row-normalized link matrices so each row sums to the grid mean,
+  which keeps `ρ(Δ)` bounded and maintains stability; exports φ*, W, avg z, avg q.
+
+- `14_nonlinear_sz_separate.py` — Same **separate `s` and `z`** model as above, but organized
+  for clarity of the **FOCs**:  
+  `(2I + Γ(s)) q = (A − c) + z + φ Ω z`, `z_i = q_i/κ_i`,
+  and `κ_i s_i^{3−φ} = (1−φ) q_i (Δ q)_i` (closed-form update for `s_i`), with full heatmaps.
+
+- `15_nonlinear_sz_sparse_links.py` — Separate `s`+`z` **with sparse links** (e.g., mean degree ≈ 5),
+  row-normalized so each row equals the grid mean for δ̄ or ω̄; this helps ensure `ρ(Γ(s)) < 2`
+  while scaling to larger **N**. Exports main (φ*, W, avg(s+z), avg q) and split (avg s, avg z) maps.
+
+- `16_semiconductor_case_study.py` — **Sectoral replica** tailored to a semiconductor sample:
+  constructs per-year similarity grids and surfaces using the same model logic, producing
+  compact figures (R&D and Sales) to compare with the theory in a focused industry setting.
+
   
 > If any script in your local copy uses **constants at the top** (instead of `--flags`), just edit those paths in the file and run. Outputs/flow remain identical.
 
