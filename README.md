@@ -33,7 +33,6 @@ sentence-transformers>=2.5.0
 
 
 
-python 01_embed_patents.py --input g_patent_abstract.tsv --out USPTO_abstracts_embeddings.parquet
 
 
 
