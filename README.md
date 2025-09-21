@@ -75,9 +75,9 @@ We study how **technology similarity** (spillovers/synergy) and **product simila
   row-normalized so each row equals the grid mean for δ̄ or ω̄; this helps ensure `ρ(Γ(s)) < 2`
   while scaling to larger **N**. Exports main (φ*, W, avg(s+z), avg q) and split (avg s, avg z) maps.
 
-- `16_semiconductor_case_study.py` — **Sectoral replica** tailored to a semiconductor sample:
-  constructs per-year similarity grids and surfaces using the same model logic, producing
-  compact figures (R&D and Sales) to compare with the theory in a focused industry setting.
+- `16_semiconductor_case_study.py` — estimates yearly patent transmission **φ̂_t** via a **two-stage** distribution-matching approach.  
+  **Stage 1:** choose global scales (s_q, s_z) so that, using baseline years at φ_ref=0.7, the implied R&D cost **κ** and marginal cost **c** match thesis targets (κ~N(5,1²), SD(c)=5; mean(c)=25 enforced via A_t = 25 + mean(r)).  
+  **Stage 2:** with (s_q, s_z) fixed, estimate **φ̂_t** for each year by matching the distributions of κ and c with a mild prior on **A**, then save **empirical_phi_two_stage.csv** and the figures (φ̂_t path, avg sales, avg z, #firms).  :contentReference[oaicite:0]{index=0}
 
   
 > If any script in your local copy uses **constants at the top** (instead of `--flags`), just edit those paths in the file and run. Outputs/flow remain identical.
@@ -87,9 +87,14 @@ We study how **technology similarity** (spillovers/synergy) and **product simila
 ## Environment
 
 ### Python (3.10+)
-```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
 
 
+
+# R (4.2+)
+install.packages(c(
+  "fixest","mgcv","xgboost","Matrix",
+  "dplyr","ggplot2","tidyr","viridis"
+))
