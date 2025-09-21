@@ -30,13 +30,7 @@ joblib>=1.3
 tqdm>=4.66
 sentence-transformers>=2.5.0
 
-# On Synergy and Rivalry — Full Replication README (flat repo, one page)
-
-This README is **complete and self-contained**. It matches the files in your repository **by exact filename** and gives **copy-paste commands** for every step. All scripts live in the repo root (no folders).
-
----
-
-## What this project does (one paragraph)
+## On Synergy and Rivalry — Full Replication README Start
 
 We study how **technology similarity** (spillovers/synergy) and **product similarity** (substitutability/rivalry) jointly shape firms’ R&D. A regulator chooses **patent transmission** φ to maximize welfare. The theory provides duopoly closed-form solutions and N-firm simulations; the empirics build a firm-pair panel from patent-portfolio embeddings (USPTO abstracts) and product similarity, merged to Compustat, and then estimate FE/GAM/XGB surfaces over the (product, technology) similarity grid.
 
