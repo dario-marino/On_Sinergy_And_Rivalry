@@ -54,7 +54,7 @@ We study how **technology similarity** (spillovers/synergy) and **product simila
 **Python — theory simulations**
 - `10_cournot_duopoly.py` — duopoly Cournot with cost-reducing R&D and patent transmission φ; heatmaps for **φ\***, **welfare**, **avg z**, **avg q**; also exports a LaTeX table.
 - `11_cournot_nfirm_linear.py` — **N-firm linear** Cournot simulation on a (δ̄, ω̄) grid; parallelized; robust for larger N; heatmaps for **φ\***, **welfare**, **avg z**, **avg q**.
-
+  
 > If any script in your local copy uses **constants at the top** (instead of `--flags`), just edit those paths in the file and run. Outputs/flow remain identical.
 
 ---
