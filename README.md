@@ -7,7 +7,6 @@
    - `USPTO_abstracts_embeddings.csv`  ← same schema as the real Parquet
    - `pairs.csv`
    - `pairs_simtech.csv` (expected output to compare)
-   - `README_SMOKE.txt` (optional notes)
 
 2) Run step **05 – firm‑year technology similarity** on the tiny inputs.
    - If your script expects Parquet, you can either:
