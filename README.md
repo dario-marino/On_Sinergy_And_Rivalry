@@ -53,11 +53,11 @@ We study how **technology similarity** (spillovers/synergy) and **product simila
 
 **Python — nonlinear & sector simulations**
 
-- "12_nonlinear_10firms_nonlinear_firstmodel.py" —  Block-iterates on `(q, z, s)`, enforces
+- `12_nonlinear_10firms_nonlinear_firstmodel.py` —  Block-iterates on `(q, z, s)`, enforces
   the **spectral-radius gate** `ρ(Γ(s)) < 2`, and exports heatmaps for **φ\***, **W**, **avg(s+z)**, **avg(q)**.
   Here 10 firms
 
-- "13_nonlinear_bounded1000firms_linksdistribution.py" - Here 1000 firms, for this reason we have a distribution of firm links (normal mean 10 se 5)
+- `13_nonlinear_bounded1000firms_linksdistribution.py` - Here 1000 firms, for this reason we have a distribution of firm links (normal mean 10 se 5)
 
 - `14_nonlinear_sz_separate.py` — Nonlinear Cournot with **separate** R&D channels:
   process R&D `z` (cost reduction, spills via ω and φ) and product-differentiation R&D `s`
