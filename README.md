@@ -50,23 +50,18 @@ We study how **technology similarity** (spillovers/synergy) and **product simila
 - `23_reg_sales.R` — **Sales**: FE + interactions, binned FE, **GAM** heatmaps (with density mask).
 - `24_ml_gam_heatmaps.R` — **optional** compact ML/GAM bundle (R&D + Sales heatmaps, plus Tweedie XGBoost maps if `xgboost` is available).
 
-**Python — theory simulations**
-- `10_cournot_duopoly.py` — duopoly Cournot with cost-reducing R&D and patent transmission φ; heatmaps for **φ\***, **welfare**, **avg z**, **avg q**; also exports a LaTeX table.
-- `11_cournot_nfirm_linear.py` — **N-firm linear** Cournot simulation on a (δ̄, ω̄) grid; parallelized; robust for larger N; heatmaps for **φ\***, **welfare**, **avg z**, **avg q**.
 
-**Python — nonlinear & sector simulations (advanced)**
+**Python — nonlinear & sector simulations**
 
-- `12_nonlinear_sz_core.py` — Nonlinear Cournot with **separate** R&D channels:
-  process R&D `z` (cost reduction, spills via ω and φ) and product-differentiation R&D `s`
-  (reduces substitutability via `s_i^(1-φ)` in Γ). Block-iterates on `(q, z, s)`, enforces
+- "12_nonlinear_10firms_nonlinear_firstmodel.py" —  Block-iterates on `(q, z, s)`, enforces
   the **spectral-radius gate** `ρ(Γ(s)) < 2`, and exports heatmaps for **φ\***, **W**, **avg(s+z)**, **avg(q)**.
+  Here 10 firms
 
-- `13_nonlinear_z_sparse.py` — Nonlinear model with **process R&D only** (`z`)
-  on **sparse δ/ω networks**. Builds row-normalized link matrices so each row sums to the grid mean,
-  which keeps `ρ(Δ)` bounded and maintains stability; exports φ*, W, avg z, avg q.
+- "13_nonlinear_bounded1000firms_linksdistribution.py" - Here 1000 firms, for this reason we have a distribution of firm links (normal mean 10 se 5)
 
-- `14_nonlinear_sz_separate.py` — Same **separate `s` and `z`** model as above, but organized
-  for clarity of the **FOCs**:  
+- `14_nonlinear_sz_separate.py` — Nonlinear Cournot with **separate** R&D channels:
+  process R&D `z` (cost reduction, spills via ω and φ) and product-differentiation R&D `s`
+  (reduces substitutability via `s_i^(1-φ)` in Γ). 
   `(2I + Γ(s)) q = (A − c) + z + φ Ω z`, `z_i = q_i/κ_i`,
   and `κ_i s_i^{3−φ} = (1−φ) q_i (Δ q)_i` (closed-form update for `s_i`), with full heatmaps.
 
@@ -79,18 +74,15 @@ We study how **technology similarity** (spillovers/synergy) and **product simila
   **Stage 2:** with (s_q, s_z) fixed, estimate **φ̂_t** for each year by matching the distributions of κ and c with a mild prior on **A**, then save **empirical_phi_two_stage.csv** and the figures (φ̂_t path, avg sales, avg z, #firms).  :contentReference[oaicite:0]{index=0}
 
   
-> If any script in your local copy uses **constants at the top** (instead of `--flags`), just edit those paths in the file and run. Outputs/flow remain identical.
+**Python - Old theory simulations (available in Appendix)**
+- `10_cournot_duopoly.py` — duopoly Cournot with cost-reducing R&D and patent transmission φ; heatmaps for **φ\***, **welfare**, **avg z**, **avg q**; also exports a LaTeX table.
+- `11_cournot_nfirm_linear.py` — **N-firm linear** Cournot simulation on a (δ̄, ω̄) grid; parallelized; robust for larger N; heatmaps for **φ\***, **welfare**, **avg z**, **avg q**.
 
 ---
 
 ## Environment
 
 ### Python (3.10+)
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-
-
-
 
 # R (4.2+)
 install.packages(c(
