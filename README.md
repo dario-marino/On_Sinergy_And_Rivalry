@@ -1,13 +1,23 @@
 # On_Sinergy_And_Rivalry
 
 ### Necessary from server
+0) Files Online Useful for Replication:
+   - [The product similarity dataset from Hoberg Philips 2025](https://hobergphillips.tuck.dartmouth.edu/tnic_doc2vec.html). The full version or TNIC 2 works
+   - [The abstracts (g_abstract) from patentsview](https://patentsview.org/download/data-download-tables)
+   - [The hugging face model to embed patents](https://huggingface.co/AAUBS/PatentSBERTa_V2)
+   - [This hugging face model for the name matching process for Compustat and USPTO](https://huggingface.co/sentence-transformers/all-mpnet-base-v2)
+   - [Compustat Database](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/query.png). You have to access Wharton for this, the image shows how the request looks like.
 
-1) Download these five files to the repo root:
+
+The first step is to create these files that I am going to give it to you directly in the next section. We have to run [the matching code](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/mymatch.py) that creates a matching table for compustat and USPTO names.
+
+
+
+2) Download these five files to the repo root:
    - `companydata_with_portfolio_embedded.csv`
    - `USPTO_abstracts_embeddings.csv`  ← same schema as the real Parquet
    - `pairs.csv`
    - `pairs_simtech.csv` (expected output to compare)
-   - [The product similarity dataset from Hoberg Philips 2025](https://hobergphillips.tuck.dartmouth.edu/tnic_doc2vec.html)
 
 3) Run step **05 – firm‑year technology similarity** on the tiny inputs.
    - If your script expects Parquet, you can either:
