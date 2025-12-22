@@ -59,13 +59,13 @@ We study how **technology similarity** (spillovers/synergy) and **product simila
 
 - `13_nonlinear_bounded1000firms_linksdistribution.py` - Here 1000 firms, for this reason we have a distribution of firm links (normal mean 10 se 5)
 
-- `14_nonlinear_sz_separate.py` — Nonlinear Cournot with **separate** R&D channels:
+- `14_nonlinear_sz_separate_5firmssmall` — Nonlinear Cournot with **separate** R&D channels:
   process R&D `z` (cost reduction, spills via ω and φ) and product-differentiation R&D `s`
   (reduces substitutability via `s_i^(1-φ)` in Γ). 
   `(2I + Γ(s)) q = (A − c) + z + φ Ω z`, `z_i = q_i/κ_i`,
   and `κ_i s_i^{3−φ} = (1−φ) q_i (Δ q)_i` (closed-form update for `s_i`), with full heatmaps.
 
-- `15_nonlinear_sz_sparse_links.py` — Separate `s`+`z` **with sparse links** (e.g., mean degree ≈ 5),
+- `15_nonlinear_sz_100firms_boundedlinks` — Separate `s`+`z` **with bounded links** (mean degree ≈ 5),
   row-normalized so each row equals the grid mean for δ̄ or ω̄; this helps ensure `ρ(Γ(s)) < 2`
   while scaling to larger **N**. Exports main (φ*, W, avg(s+z), avg q) and split (avg s, avg z) maps.
 
