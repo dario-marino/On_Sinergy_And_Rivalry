@@ -7,13 +7,14 @@
    - `USPTO_abstracts_embeddings.csv`  ← same schema as the real Parquet
    - `pairs.csv`
    - `pairs_simtech.csv` (expected output to compare)
+   - [The product similarity dataset from Hoberg Philips 2025](https://hobergphillips.tuck.dartmouth.edu/tnic_doc2vec.html)
 
-2) Run step **05 – firm‑year technology similarity** on the tiny inputs.
+3) Run step **05 – firm‑year technology similarity** on the tiny inputs.
    - If your script expects Parquet, you can either:
      - `pip install pyarrow` and point to your real Parquet **(for the full run)**, or
      - temporarily switch the loader to read the provided CSV just to verify the math/wiring.
 
-3) Confirm you reproduce a `pairs_simtech.csv` with 4 rows and the same `sim_tech` values
+4) Confirm you reproduce a `pairs_simtech.csv` with 4 rows and the same `sim_tech` values
    (order may differ if you re‑sort).
 
 Requirements:
