@@ -9,23 +9,20 @@
    - [Compustat Database](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/query.png). You have to access Wharton for this, the image shows how the request looks like.
 
 
-The first step is to create these files that I am going to give it to you directly in the next section. We have to run [the matching code](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/mymatch.py) that creates a matching table for compustat and USPTO names. There is also a discern path but it was used to compare the performance of my matching with the DISCERN dataset, it can be deleted. Then with this matching table we can create companydata_with_portfolio_embedded.csv, which is a file I give you directly but it is only what can be created with [the following code](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/mypatentportfolio.py).
+The first step is to create these files that I am going to give it to you directly in the next section. We have to run [the matching code](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/mymatch.py) that creates a matching table for compustat and USPTO names. This is - `02_match_companies_to_assignees.py` — match **Compustat** company names to **PatentsView** assignees (regex clean + SBERT + cosine) → reviewable CSV. There is also a discern path but it was used to compare the performance of my matching with the DISCERN dataset, it can be deleted. 
+
+Then with this matching table we can create companydata_with_portfolio_embedded.csv, which is a file I give you directly but it is only what can be created with [the following code](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/mypatentportfolio.py). This is `03_make_company_portfolios.py` — build **firm-year patent portfolios** (rolling 5-year window) from validated matches → `companydata_with_portfolio_embedded.csv`.
 
 
+You are then going to use `01_embed_patents.py` — compute **PatentSBERTa_V2** embeddings for USPTO abstracts (chunked, memory-safe) → Parquet `USPTO_abstracts_embeddings.parquet`. This is the [code](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/01_embed_patents.py). Remember that for this similarity step you have to download the abstract from patentsview.
 
-2) Download these five files to the repo root:
+Then we are going to create the file that creates a pair for each company every year, this is the [following code](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/pairwisecreation.py). Then we compute the similarity between those companies at the technology level (having already the product level from Hoberg and Phillips). This will give us `pairs_simtech.csv. This is [the code](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/Portfolio_Similarity.py) and its [sbatch](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/Portfolio_Similarity.sbatch) to run it on a server with 128 cores. 
+
+
+2) Download these files to the repo root:
    - `companydata_with_portfolio_embedded.csv`
-   - `USPTO_abstracts_embeddings.csv`  ← same schema as the real Parquet
-   - `pairs.csv`
-   - `pairs_simtech.csv` (expected output to compare)
-
-3) Run step **05 – firm‑year technology similarity** on the tiny inputs.
-   - If your script expects Parquet, you can either:
-     - `pip install pyarrow` and point to your real Parquet **(for the full run)**, or
-     - temporarily switch the loader to read the provided CSV just to verify the math/wiring.
-
-4) Confirm you reproduce a `pairs_simtech.csv` with 4 rows and the same `sim_tech` values
-   (order may differ if you re‑sort).
+   - `pairs_simtech.csv`
+   - `pair_product.csv`. This is just `pairs_simtech.csv` attached with the financial data and the hoberg and phillips dataset, in case you want to start directly with the analysis without actually reproducing the dataset creation.
 
 Requirements:
 
@@ -40,20 +37,13 @@ joblib>=1.3
 tqdm>=4.66
 sentence-transformers>=2.5.0
 
+
+Now on to the Results section, all done with R:
+
 ## On Synergy and Rivalry — Full Replication README Start
 
 We study how **technology similarity** (spillovers/synergy) and **product similarity** (substitutability/rivalry) jointly shape firms’ R&D. A regulator chooses **patent transmission** φ to maximize welfare. The theory provides duopoly closed-form solutions and N-firm simulations; the empirics build a firm-pair panel from patent-portfolio embeddings (USPTO abstracts) and product similarity, merged to Compustat, and then estimate FE/GAM/XGB surfaces over the (product, technology) similarity grid.
-
 ---
-
-## Files in this repo (flat)
-
-**Python — data & similarity**
-- `01_embed_patents.py` — compute **PatentSBERTa_V2** embeddings for USPTO abstracts (chunked, memory-safe) → Parquet `USPTO_abstracts_embeddings.parquet`.
-- `02_match_companies_to_assignees.py` — match **Compustat** company names to **PatentsView** assignees (regex clean + SBERT + cosine) → reviewable CSV.
-- `03_make_company_portfolios.py` — build **firm-year patent portfolios** (rolling 5-year window) from validated matches → `companydata_with_portfolio_embedded.csv`.
-- `04_products_portfolio_similarity.py` — compute **within** and **between** portfolio similarity at the product/release-year level (cosine); writes CSV + PNG.
-- `05_firmyear_similarity.py` — compute **firm-year technology similarity** for `pairs.csv` using **centroids** of patent embeddings + **diagonal cosine** → `pairs_simtech.csv`.
 
 **R — empirical analysis**
 - `21_build_pair_product.R` — build **pair_product.csv** (merges sales/EBITDA; computes HHI; fixes `gvkey` formats).
