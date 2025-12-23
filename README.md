@@ -40,7 +40,7 @@ sentence-transformers>=2.5.0
 
 Now on to the Results section, all done with R:
 
-## On Synergy and Rivalry — Full Replication README Start
+
 ---
 
 **R — empirical analysis**
@@ -50,7 +50,7 @@ Now on to the Results section, all done with R:
 - `24_ml_gam_heatmaps.R` — **optional** compact ML/GAM bundle (R&D + Sales heatmaps, plus Tweedie XGBoost maps if `xgboost` is available).
 
 
-**Python — nonlinear & sector simulations**
+## Python — nonlinear & sector Model simulations
 
 - `12_nonlinear_10firms_nonlinear_firstmodel.py` —  Block-iterates on `(q, z, s)`, enforces
   the **spectral-radius gate** `ρ(Γ(s)) < 2`, and exports heatmaps for **φ\***, **W**, **avg(s+z)**, **avg(q)**.
