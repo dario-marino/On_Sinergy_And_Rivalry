@@ -9,7 +9,7 @@
    - [Compustat Database](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/query.png). You have to access Wharton for this, the image shows how the request looks like.
 
 
-The first step is to create these files that I am going to give it to you directly in the next section. We have to run [the matching code](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/mymatch.py) that creates a matching table for compustat and USPTO names.
+The first step is to create these files that I am going to give it to you directly in the next section. We have to run [the matching code](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/mymatch.py) that creates a matching table for compustat and USPTO names. Then with this matching table we can create companydata_with_portfolio_embedded.csv, which is a file I give you directly but it is only what can be created with [the following code](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/mypatentportfolio.py)
 
 
 
