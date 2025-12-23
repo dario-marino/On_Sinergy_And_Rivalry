@@ -44,10 +44,13 @@ Now on to the Results section, all done with R:
 ---
 
 **R — empirical analysis**
-- `21_build_pair_product.R` — build **pair_product.csv** (merges sales/EBITDA; computes HHI; fixes `gvkey` formats).
-- `22_reg_rd.R` — **R&D**: FE + interactions, **binned** FE by similarity deciles, **GAM** heatmaps (with density mask).
-- `23_reg_sales.R` — **Sales**: FE + interactions, binned FE, **GAM** heatmaps (with density mask).
-- `24_ml_gam_heatmaps.R` — **optional** compact ML/GAM bundle (R&D + Sales heatmaps, plus Tweedie XGBoost maps if `xgboost` is available).
+
+We have to use the dataset from Compustat that we downloaded (companydata) to make it suitable for our analysis. We are going to select the variables, merge with the Hoberg and Phillips data a the SIC 2 digit level (so relationships between firms who share at least the first 2 digits). Here you need `salescompustat.csv` another query from compustat to match sales and ebitda that I didn't download at the first run. This is the [code](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/1%20Dataset%20Preparation.R)
+You can skip this part directly and use `pair_product.csv`. I already said that I will make it available.
+
+When you have `pair_product.csv` you can use `Code R&D.R`, this [code](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/2%20Code%20R%26D.R) is for the linear regression without interaction term, with interaction term, the glm, the GAM, the XgBoost, both for levels and logs.
+
+If you want to recreate the data on sales (GAM) available in the appendix you should use this [code](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/4%20Code%20Sales.R).
 
 
 ## Python — nonlinear & sector Model simulations
