@@ -52,6 +52,7 @@ When you have `pair_product.csv` you can use `Code R&D.R`, this [code](https://g
 
 If you want to recreate the data on sales (GAM) available in the appendix you should use this [code](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/4%20Code%20Sales.R).
 
+For the semiconductor dataset I do not have the permission to share it for now since it is still under construction for the APTO NSF grant.
 
 ## Python — nonlinear & sector Model simulations
 
