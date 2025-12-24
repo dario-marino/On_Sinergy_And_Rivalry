@@ -12,6 +12,30 @@ library(ggplot2)
 library(viridis)
 library(gridExtra)
 
+
+pair_product <- read.csv("/mnt/ide0/home/dariomarino/pair_product.csv")
+
+# Set up parallel processing
+cl <- makeCluster(30)
+clusterEvalQ(cl, library(mgcv))
+
+# Remove negative R&D values and ensure all variables are in normal (non-log) form
+pair_product <- pair_product %>%
+  filter(xrd_start >= 0, xrd_recv >= 0) %>%  # Remove negative R&D values
+  mutate(
+    # Ensure all variables are in normal values (remove any existing log transformations)
+    # R&D variables (dependent and control)
+    xrd_start = as.numeric(xrd_start),
+    xrd_recv = as.numeric(xrd_recv),
+    
+    # Other financial variables in normal values
+    at_start = as.numeric(at_start),
+    at_recv = as.numeric(at_recv),
+    emp_start = as.numeric(emp_start),
+    emp_recv = as.numeric(emp_recv),
+    ebitda_start = as.numeric(ebitda_start)
+  )
+
 # ============================================================================
 # PART 0: LINEAR FIXED EFFECTS MODELS — NO INTERACTION (LEVELS)
 # ============================================================================
@@ -1299,5 +1323,6 @@ p2 <- plot_heat(agg, "mean_sale",       "Average sale_start",       palette = "m
 p4 <- plot_heat(agg, "mean_log1p_sale", "Average log(1 + sale_start)",palette = "magma")
 
 print(p1); print(p2); print(p3); print(p4)
+
 
 
