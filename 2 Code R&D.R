@@ -451,21 +451,12 @@ etable(
 
 library(ggplot2)
 library(dplyr)
-
-pair_product <- pair_product %>%
-  filter(xrd_start >= 0)
-
-# Load necessary packages
-library(mgcv)
-library(dplyr)
-library(ggplot2)
-library(tidyr)
-
 # --- STEP 1: Prepare data ----
 pair_product <- pair_product %>%
   filter(xrd_start >= 0) %>%
   mutate(
-    # Remove log transformation - use actual R&D values
+    # Add 1 to handle zeros for Gamma distribution
+    xrd_start_plus1 = xrd_start + 1,
     fyear_start = factor(fyear_start),
     sic_start   = factor(sic_start)
   )
@@ -484,15 +475,14 @@ fit_model <- function(formula_text) {
     data = pair_product,
     discrete = TRUE,
     nthreads = 30,
-    # Add gamma distribution for positive continuous data
     family = Gamma(link = "log")
   )
 }
 
 smooth_term     <- "s(product_similarity, technology_similarity)"
 control_formula <- paste(controls, collapse = " + ")
-# Change dependent variable from log_xrd_start to xrd_start
-base_formula    <- paste("xrd_start ~", smooth_term, "+", control_formula)
+# Use xrd_start_plus1 as dependent variable
+base_formula    <- paste("xrd_start_plus1 ~", smooth_term, "+", control_formula)
 
 formulas <- list(
   controls_only     = base_formula,
@@ -1276,6 +1266,7 @@ p2 <- plot_heat(agg, "mean_sale",       "Average sale_start",       palette = "m
 p4 <- plot_heat(agg, "mean_log1p_sale", "Average log(1 + sale_start)",palette = "magma")
 
 print(p1); print(p2); print(p3); print(p4)
+
 
 
 
