@@ -1,3 +1,17 @@
+library(fixest)
+library(mgcv)
+library(xgboost)
+library(Matrix)
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(future)
+library(furrr)
+library(parallel)
+library(ggplot2)
+library(viridis)
+library(gridExtra)
+
 # ============================================================================
 # PART 0: LINEAR FIXED EFFECTS MODELS — NO INTERACTION (LEVELS)
 # ============================================================================
@@ -1285,4 +1299,5 @@ p2 <- plot_heat(agg, "mean_sale",       "Average sale_start",       palette = "m
 p4 <- plot_heat(agg, "mean_log1p_sale", "Average log(1 + sale_start)",palette = "magma")
 
 print(p1); print(p2); print(p3); print(p4)
+
 
