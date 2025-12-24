@@ -81,53 +81,6 @@ etable(
 )
 
 
-# ============================================================================
-# PART 0: LINEAR FIXED EFFECTS MODELS — NO INTERACTION (LOG(1+R&D))
-# ============================================================================
-
-cat("\n=== LINEAR FIXED EFFECTS MODELS — NO INTERACTION (LOG(1+R&D)) ===\n")
-
-controls_log <- c(
-  "log1p_at_start", "log1p_emp_start",
-  "log1p_at_recv", "log1p_emp_recv",
-  "log1p_xrd_recv",
-  "concentration_start", "concentration_recv",
-  "log1p_ebitda_start"
-)
-
-control_formula_log <- paste(controls_log, collapse = " + ")
-
-base_formula_log <- paste(
-  "log1p_xrd_start ~ product_similarity + technology_similarity +",
-  control_formula_log
-)
-
-lin_log_1 <- feols(as.formula(base_formula_log), data = pair_product)
-
-lin_log_2 <- feols(
-  as.formula(paste(base_formula_log, "| fyear_start")),
-  data = pair_product
-)
-
-lin_log_3 <- feols(
-  as.formula(paste(base_formula_log, "| sic_start")),
-  data = pair_product,
-  cluster = ~ sic_start
-)
-
-lin_log_4 <- feols(
-  as.formula(paste(base_formula_log, "| fyear_start + sic_start")),
-  data = pair_product,
-  cluster = ~ sic_start
-)
-
-etable(
-  lin_log_1, lin_log_2, lin_log_3, lin_log_4,
-  title = "Linear Effects on R&D (log(1+R&D), No Interaction)",
-  headers = c("Controls", "Time FE", "Sector FE", "Time + Sector FE")
-)
-
-
 
 
 ###########REGRESSION 1 (to ask to see the effect like in bloom also on sales, quality citation, and our measure
@@ -1323,6 +1276,7 @@ p2 <- plot_heat(agg, "mean_sale",       "Average sale_start",       palette = "m
 p4 <- plot_heat(agg, "mean_log1p_sale", "Average log(1 + sale_start)",palette = "magma")
 
 print(p1); print(p2); print(p3); print(p4)
+
 
 
 
