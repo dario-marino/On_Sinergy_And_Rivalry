@@ -445,7 +445,7 @@ etable(
 
 
 ################
-GAM
+###GAM
 ################
 
 
@@ -1276,6 +1276,7 @@ p2 <- plot_heat(agg, "mean_sale",       "Average sale_start",       palette = "m
 p4 <- plot_heat(agg, "mean_log1p_sale", "Average log(1 + sale_start)",palette = "magma")
 
 print(p1); print(p2); print(p3); print(p4)
+
 
 
 
