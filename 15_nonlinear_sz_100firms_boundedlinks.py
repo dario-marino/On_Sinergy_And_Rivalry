@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 # nonlinear_RD_s_z_sparse_links5.py
 """
-Same s+z model, but limit links via a truncated-normal degree target:
-- mean degree ~ 5, sd ~ 2 (clamped to [0, N-1]), undirected simple graph.
-- Row-normalize weights so each row sum equals the grid mean (δ̄ or ω̄).
-This bounds ρ(Δ) ≤ δ̄ and helps satisfy the standard stability gate (ρ(Γ(s)) < 2).  # :contentReference[oaicite:3]{index=3}
 """
 
 import math
@@ -88,8 +84,15 @@ def equilibrium(delta: np.ndarray,
 
     for _ in range(MAX_ITERS):
         Gamma = gamma_from_s(s)
-        if spectral_radius(Gamma) >= 2.0:
+
+        # ONLY CHANGE: replace spectral radius gate with row-sum bound using same denom as Γ(s)
+        denom = np.ones_like(s) if abs(1.0 - phi) < 1e-14 else np.maximum(s, S_MIN) ** (1.0 - phi)
+        if np.max(delta.sum(axis=1) / denom) >= 2.0:
             return False, None, None, None
+
+        # as said before this can be:
+        ##if np.max(delta_row_sum / np.power(z, 1 - phi)) >= 2.0:
+        #   return False, None, None
         rhs = (A - c) + z + phi * (omega @ z)
         try:
             q = np.linalg.solve(2.0 * np.eye(N) + Gamma, rhs)
@@ -103,8 +106,12 @@ def equilibrium(delta: np.ndarray,
         s_new = np.maximum(np.array([_solve_s_i(q[i], sum_dq[i], kappa[i], phi) for i in range(N)]), S_MIN)
 
         Gamma_new = gamma_from_s(s_new)
-        if spectral_radius(Gamma_new) >= 2.0:
+
+        # ONLY CHANGE: replace spectral radius gate with row-sum bound using same denom as Γ(s_new)
+        denom_new = np.ones_like(s_new) if abs(1.0 - phi) < 1e-14 else np.maximum(s_new, S_MIN) ** (1.0 - phi)
+        if np.max(delta.sum(axis=1) / denom_new) >= 2.0:
             return False, None, None, None
+
         rhs_new = (A - c) + z_new + phi * (omega @ z_new)
         try:
             q_new = np.linalg.solve(2.0 * np.eye(N) + Gamma_new, rhs_new)
