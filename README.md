@@ -91,4 +91,6 @@ For the semiconductor dataset I do not have the permission to share it for now s
 install.packages(c(
   "fixest","mgcv","xgboost","Matrix",
   "dplyr","ggplot2","tidyr","viridis"
+
+  I used 40 cores and 250 GB of RAM on the remote UChicago Acropolis Server
 ))
