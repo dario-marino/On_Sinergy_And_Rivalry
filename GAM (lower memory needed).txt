@@ -1,0 +1,169 @@
+################
+###GAM
+################
+
+library(fixest)
+library(mgcv)
+library(xgboost)
+library(Matrix)
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(future)
+library(furrr)
+library(parallel)
+library(ggplot2)
+library(viridis)
+library(gridExtra)
+
+
+pair_product <- read.csv("/mnt/ide0/home/dariomarino/pair_product.csv")
+
+# Set up parallel processing
+cl <- makeCluster(30)
+clusterEvalQ(cl, library(mgcv))
+
+# --- STEP 1: Prepare data ----
+pair_product <- pair_product %>%
+  filter(xrd_start >= 0) %>%
+  mutate(
+    # Add 1 to handle zeros for Gamma distribution
+    xrd_start_plus1 = xrd_start + 1,
+    fyear_start = factor(fyear_start),
+    sic_start   = factor(sic_start)
+  )
+
+controls <- c(
+  "at_start", "emp_start", "ebitda_start", "xrd_recv",
+  "at_recv", "emp_recv", "fyear_recv", "concentration_start",
+  "concentration_recv"
+)
+
+# --- STEP 2: Fit GAM models with bam() ----
+# KEY CHANGE: Reduce basis dimension (k) to manage memory
+
+fit_model <- function(formula_text) {
+  bam(
+    as.formula(formula_text),
+    data = pair_product,
+    discrete = TRUE,
+    nthreads = 30,
+    family = Gamma(link = "log"),
+    # Use smaller basis dimension and coarser discretization
+    method = "fREML",
+    chunk.size = 10000
+  )
+}
+
+# Reduce k (basis dimension) from default (~100) to 15-20
+smooth_term     <- "s(product_similarity, technology_similarity, k = 20)"
+control_formula <- paste(controls, collapse = " + ")
+base_formula    <- paste("xrd_start_plus1 ~", smooth_term, "+", control_formula)
+
+formulas <- list(
+  controls_only     = base_formula,
+  year_fe           = paste0(base_formula, " + fyear_start"),
+  sector_fe         = paste0(base_formula, " + sic_start"),
+  year_sector_fe    = paste0(base_formula, " + fyear_start + sic_start")
+)
+
+# Fit models one at a time with garbage collection
+cat("Fitting model 1/4: Controls only\n")
+model_controls_only  <- fit_model(formulas$controls_only)
+gc()
+
+cat("Fitting model 2/4: Year FE\n")
+model_year_fe        <- fit_model(formulas$year_fe)
+gc()
+
+cat("Fitting model 3/4: Sector FE\n")
+model_sector_fe      <- fit_model(formulas$sector_fe)
+gc()
+
+cat("Fitting model 4/4: Year + Sector FE\n")
+model_year_sector_fe <- fit_model(formulas$year_sector_fe)
+gc()
+
+models <- list(
+  model_controls_only,
+  model_year_fe,
+  model_sector_fe,
+  model_year_sector_fe
+)
+
+# --- STEP 3: Create prediction grid ----
+
+control_medians <- pair_product %>%
+  summarise(across(all_of(controls), ~median(., na.rm = TRUE)))
+
+# Use coarser grid to reduce prediction memory
+grid_data <- expand.grid(
+  product_similarity = seq(0, 1, length.out = 50),  # Reduced from 100
+  technology_similarity = seq(0, 1, length.out = 50)  # Reduced from 100
+)
+grid_data <- bind_cols(grid_data, control_medians[rep(1, nrow(grid_data)), ])
+
+grid_data$fyear_start <- factor(rep(levels(pair_product$fyear_start)[1], nrow(grid_data)),
+                                levels = levels(pair_product$fyear_start))
+grid_data$sic_start <- factor(rep(levels(pair_product$sic_start)[1], nrow(grid_data)),
+                              levels = levels(pair_product$sic_start))
+
+# --- Create density map to mask low-observation areas ----
+
+pair_product_density <- pair_product %>%
+  mutate(
+    ps_bin = round(product_similarity, 2),
+    ts_bin = round(technology_similarity, 2)
+  ) %>%
+  count(ts_bin, ps_bin, name = "density")
+
+grid_data <- grid_data %>%
+  mutate(
+    ps_bin = round(product_similarity, 2),
+    ts_bin = round(technology_similarity, 2)
+  ) %>%
+  left_join(pair_product_density, by = c("ts_bin", "ps_bin"))
+
+# Mask areas with low density
+density_threshold <- 10
+grid_data <- grid_data %>%
+  mutate(use_point = ifelse(is.na(density) | density < density_threshold, FALSE, TRUE))
+
+# --- STEP 4: Plotting and saving ----
+
+plot_heatmap <- function(model, title) {
+  grid_data$predicted_rnd <- predict(model, newdata = grid_data, type = "response")
+  
+  ggplot(grid_data %>% filter(use_point), aes(x = technology_similarity, y = product_similarity, fill = predicted_rnd)) +
+    geom_tile() +
+    scale_fill_viridis_c() +
+    labs(
+      title = title,
+      x = "Technology Similarity",
+      y = "Product Similarity",
+      fill = "Predicted R&D"
+    ) +
+    theme_minimal()
+}
+
+titles <- c(
+  "GAM: Controls Only",
+  "GAM: Controls + Year Fixed Effects",
+  "GAM: Controls + Sector Fixed Effects",
+  "GAM: Controls + Year + Sector Fixed Effects"
+)
+
+plots <- Map(plot_heatmap, models, titles)
+
+for (p in plots) print(p)
+
+filenames <- c(
+  "heatmap_controls_only.png",
+  "heatmap_year_fe.png",
+  "heatmap_sector_fe.png",
+  "heatmap_year_sector_fe.png"
+)
+
+Map(ggsave, filename = filenames, plot = plots, width = 8, height = 6)
+
+cat("Done! All heatmaps saved.\n")
