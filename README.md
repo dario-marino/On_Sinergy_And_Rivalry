@@ -78,6 +78,8 @@ For the semiconductor dataset I do not have the permission to share it for now s
   **Stage 1:** choose global scales (s_q, s_z) so that, using baseline years at φ_ref=0.7, the implied R&D cost **κ** and marginal cost **c** match thesis targets (κ~N(5,1²), SD(c)=5; mean(c)=25 enforced via A_t = 25 + mean(r)).  
   **Stage 2:** with (s_q, s_z) fixed, estimate **φ̂_t** for each year by matching the distributions of κ and c with a mild prior on **A**, then save **empirical_phi_two_stage.csv** and the figures (φ̂_t path, avg sales, avg z, #firms).  :contentReference[oaicite:0]{index=0}
 
+- You can also see the alternative cost distribution simulations in [this code for 10 firms](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/nonlin_alternativecostdistribution_10firms.py) and [this code for 1000 firms](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/nonlin_alternativecostdistribution_1000firms.py) 
+
   
 **Python - Old theory simulations (available in Appendix)**
 - `10_cournot_duopoly.py` — duopoly Cournot with cost-reducing R&D and patent transmission φ; heatmaps for **φ\***, **welfare**, **avg z**, **avg q**; also exports a LaTeX table.
