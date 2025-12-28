@@ -11,6 +11,8 @@
 
 The first step is to create these files that I am going to give it to you directly in the next section. We have to run [the matching code](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/mymatch.py) that creates a matching table for compustat and USPTO names. This is - `02_match_companies_to_assignees.py` — match **Compustat** company names to **PatentsView** assignees (regex clean + SBERT + cosine) → reviewable CSV. There is also a discern path but it was used to compare the performance of my matching with the DISCERN dataset, it can be deleted. 
 
+If you want to directly download the matching table for replication or because you need a better matching between Compustat names and Assignees in USPTO dataset here is [the table](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/company_assignee_matching_for_review.csv) 
+
 Then with this matching table we can create companydata_with_portfolio_embedded.csv, which is a file I give you directly but it is only what can be created with [the following code](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/mypatentportfolio.py). This is `03_make_company_portfolios.py` — build **firm-year patent portfolios** (rolling 5-year window) from validated matches → `companydata_with_portfolio_embedded.csv`.
 
 
