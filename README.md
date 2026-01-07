@@ -56,7 +56,7 @@ If you want to recreate the data on sales (GAM) available in the appendix you sh
 
 If you need a version that uses lower memory you can look at [this code](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/GAM%20(lower%20memory%20needed).txt). But again you would still need around 150 GB of RAM for it.
 
-For the semiconductor dataset I do not have the permission to share it for now since it is still under construction for the APTO NSF grant.
+For the semiconductor dataset I do not have the permission to share it for now since it is still under construction for the APTO NSF grant. But I used these two codes: [here](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/semic1.py) and [here](https://github.com/dario-marino/On_Sinergy_And_Rivalry/blob/main/semic2.py) to make the semiconductor dataset that I then applied the same codes that I used for the main dataset.
 
 ## Python — nonlinear & sector Model simulations
 
